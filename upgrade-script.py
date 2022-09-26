@@ -174,19 +174,24 @@ if __name__ == "__main__":
         print('There are no VMs on this host, skipping VM power down.')
     else:
         print("")
+        # I've created this variable as a substitute for index variable in the for loop.
+        # index variable in the for loop is thrown off by ESXi hosts with powered off VMs
+        auto_vm_power_on_sequence = 1
         # powerstate dict must use separate index+1 or iteration will not be in ascending order.
         for index, i in enumerate(powerstate.keys()):
             if powerstate[i] == "poweredOn":
                 # Configure VM for auto-start
                 print('vim-cmd hostsvc/autostartmanager/update_autostartentry ' + vms[i] + ' "PowerOn" "15" "'
-                      + str((index+1)) + '" "systemDefault" "systemDefault" "systemDefault"')
+                      + str(auto_vm_power_on_sequence) + '" "systemDefault" "systemDefault" "systemDefault"')
                 sendcommand_onbox('vim-cmd hostsvc/autostartmanager/update_autostartentry ' + vms[i] +
-                                  ' "PowerOn" "15" "' + str((index+1)) +
+                                  ' "PowerOn" "15" "' + str(auto_vm_power_on_sequence) +
                                   '" "systemDefault" "systemDefault" "systemDefault"')
 
                 # Powering off the VM, skipping shutdown since the script runs on esxi and severs user connection
                 print("Shutting down ID: " + i + "\n")
                 shutdown_response = poweroffvm_onbox(i)
+                auto_vm_power_on_sequence += 1
+                print(shutdown_response)
 
     sleep(1)
 
