@@ -160,7 +160,7 @@ def upgradehost_onbox(full_path_to_zip):
     Use the globally configured UPGRADE_PROFILE name.
     """
     print("Sending upgrade command to host:")
-    cmd = "esxcli software profile update -p {0} --no-hardware-warning -d '{1}'".format(UPGRADE_PROFILE, full_path_to_zip)
+    cmd = "esxcli software profile update -p {0} -d '{1}'".format(UPGRADE_PROFILE, full_path_to_zip)
     print("Command: " + cmd)
     resp = sendcommand_onbox(cmd)
     print(resp)
